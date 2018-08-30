@@ -5,15 +5,23 @@
   
 
   
-  <title>Hexo</title>
+  <title>Set | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="集合类分为两个大类：Collection和Map，区别在于每个位置保存的元素个数，Collection保存的是一个元素，Map保存的是一个键值对。 1. Collection根据特性，Collection主要有Set，Queue，List三部分组成 1.1 Set不可重复，无序的集合，主要继承关系 1234567graph TDB[Set]B--&amp;gt;C[EnumSet]B--&amp;gt;D[So">
+<meta name="keywords" content="Java, Collection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Set">
+<meta property="og:url" content="http://yoursite.com/2017/12/24/Set/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="集合类分为两个大类：Collection和Map，区别在于每个位置保存的元素个数，Collection保存的是一个元素，Map保存的是一个键值对。 1. Collection根据特性，Collection主要有Set，Queue，List三部分组成 1.1 Set不可重复，无序的集合，主要继承关系 1234567graph TDB[Set]B--&amp;gt;C[EnumSet]B--&amp;gt;D[So">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/TreeSet_uml.png">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/EnumSet_uml.png">
+<meta property="og:updated_time" content="2017-12-24T06:03:50.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Set">
+<meta name="twitter:description" content="集合类分为两个大类：Collection和Map，区别在于每个位置保存的元素个数，Collection保存的是一个元素，Map保存的是一个键值对。 1. Collection根据特性，Collection主要有Set，Queue，List三部分组成 1.1 Set不可重复，无序的集合，主要继承关系 1234567graph TDB[Set]B--&amp;gt;C[EnumSet]B--&amp;gt;D[So">
+<meta name="twitter:image" content="http://p1791xv5d.bkt.clouddn.com/TreeSet_uml.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -60,198 +68,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-zookeeper集群部署" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/29/zookeeper集群部署/" class="article-date">
-  <time datetime="2018-08-28T23:57:57.000Z" itemprop="datePublished">2018-08-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/29/zookeeper集群部署/">zookeeper集群部署</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<h1 id="1-安装jdk"><a href="#1-安装jdk" class="headerlink" title="1. 安装jdk"></a>1. 安装jdk</h1><p>首先查看机器是否安装jdk，如果是OpenJDK，则卸载重新安装（兼容性问题）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost tmp]# rpm -qa |grep java</span><br><span class="line">java-1.8.0-openjdk-devel-1.8.0.181-3.b13.el7_5.x86_64</span><br><span class="line">python-javapackages-3.4.1-11.el7.noarch</span><br><span class="line">tzdata-java-2018e-3.el7.noarch</span><br><span class="line">java-1.8.0-openjdk-headless-1.8.0.181-3.b13.el7_5.x86_64</span><br><span class="line">java-1.8.0-openjdk-1.8.0.181-3.b13.el7_5.x86_64</span><br><span class="line">javapackages-tools-3.4.1-11.el7.noarch</span><br><span class="line"></span><br><span class="line">[root@localhost tmp]# rpm -e java-1.8.0-openjdk-devel-1.8.0.181-3.b13.el7_5.x86_64 —nodeps</span><br><span class="line">[root@localhost tmp]# rpm -e java-1.8.0-openjdk-headless-1.8.0.181-3.b13.el7_5.x86_64 --nodeps</span><br></pre></td></tr></table></figure>
-<h1 id="2-配置jdk环境变量"><a href="#2-配置jdk环境变量" class="headerlink" title="2. 配置jdk环境变量"></a>2. 配置jdk环境变量</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/java/jdk1.8.0_141</span><br><span class="line">export JRE_HOME=/usr/local/java/jdk1.8.0_141/jre</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib</span><br><span class="line">export PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$JRE_HOME/bin:$PATH</span><br><span class="line"></span><br><span class="line">[root@localhost java]# vim /etc/profile</span><br><span class="line">[root@localhost java]# source /etc/profile</span><br><span class="line">[root@localhost java]# java -version</span><br></pre></td></tr></table></figure>
-<h1 id="3-配置zookeeper"><a href="#3-配置zookeeper" class="headerlink" title="3. 配置zookeeper"></a>3. 配置zookeeper</h1><h2 id="3-1-解压安装包"><a href="#3-1-解压安装包" class="headerlink" title="3.1 解压安装包"></a>3.1 解压安装包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost tmp]# tar -zxvf zookeeper-3.4.11.tar.gz -C /usr/local/</span><br></pre></td></tr></table></figure>
-<h2 id="3-2-配置环境变量"><a href="#3-2-配置环境变量" class="headerlink" title="3.2 配置环境变量"></a>3.2 配置环境变量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ZK_HOME=/usr/local/zookeeper-3.4.11</span><br><span class="line">export PATH=$ZK_HOME/bin:$PATH</span><br></pre></td></tr></table></figure>
-<h2 id="3-3-进入zookeeper的conf目录修改配置文件"><a href="#3-3-进入zookeeper的conf目录修改配置文件" class="headerlink" title="3.3 进入zookeeper的conf目录修改配置文件"></a>3.3 进入zookeeper的conf目录修改配置文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost zookeeper-3.4.11]# mkdir data</span><br><span class="line">[root@localhost zookeeper-3.4.11]# cd conf/</span><br><span class="line">[root@localhost conf]# ls</span><br><span class="line">configuration.xsl  log4j.properties  zoo_sample.cfg</span><br><span class="line">[root@localhost conf]# mv zoo_sample.cfg zoo.cfg</span><br><span class="line">[root@localhost conf]# ls</span><br><span class="line">configuration.xsl  log4j.properties  zoo.cfg</span><br><span class="line">[root@localhost conf]# vim zoo.cfg</span><br><span class="line"></span><br><span class="line">tickTime=2000</span><br><span class="line"></span><br><span class="line">initLimit=10</span><br><span class="line"></span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line">dataDir=/usr/local/zookeeper-3.4.11/data</span><br><span class="line"></span><br><span class="line">clientPort=2181</span><br><span class="line"></span><br><span class="line">server.0=10.239.25.101:2888:3888</span><br><span class="line">server.1=10.239.25.102:2888:3888</span><br><span class="line">server.2=10.239.25.103:2888:3888</span><br></pre></td></tr></table></figure>
-<p>server.X的条目列出构成ZooKeeper服务的服务器。当服务器启动时，它通过查找数据目录中的文件myid来知道它是哪个服务器 。该文件包含服务器编号，以ASCII格式显示。</p>
-<p>最后，请注意每个服务器名称后面的两个端口号：“2888”和“3888”。对等体使用前端口连接到其他对等体。这样的连接是必要的，使得对等体可以进行通信，例如，以商定更新的顺序。更具体地说，一个ZooKeeper服务器使用这个端口来连接追随者到领导者。当新的领导者出现时，追随者使用此端口打开与领导者的TCP连接。因为默认领导选举也使用TCP，所以我们目前需要另外一个端口进行领导选举。这是服务器条目中的第二个端口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server.X=A:B:C</span><br><span class="line">X-代表服务器编号</span><br><span class="line">A-代表ip</span><br><span class="line">B和C-代表端口，这个端口用来系统之间通信</span><br></pre></td></tr></table></figure></p>
-<h2 id="3-4-配置数据目录"><a href="#3-4-配置数据目录" class="headerlink" title="3.4 配置数据目录"></a>3.4 配置数据目录</h2><p>在data文件夹下面创建一个文件，叫myid，并且在文件里写入server.X对应的X<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost zookeeper-3.4.11]# cd data/</span><br><span class="line">[root@localhost data]# vim myid</span><br></pre></td></tr></table></figure></p>
-<h2 id="3-5-启动服务器"><a href="#3-5-启动服务器" class="headerlink" title="3.5 启动服务器"></a>3.5 启动服务器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br><span class="line">开启防火墙</span><br><span class="line">[root@localhost zookeeper-3.4.11]# firewall-cmd --zone=public --add-port=2888/tcp --permanent</span><br><span class="line">success</span><br><span class="line">[root@localhost zookeeper-3.4.11]# firewall-cmd --zone=public --add-port=3888/tcp --permanent</span><br><span class="line">success</span><br><span class="line">[root@localhost zookeeper-3.4.11]# systemctl restart firewalld</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@localhost conf]# zkServer.sh start</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /usr/local/zookeeper-3.4.11/bin/../conf/zoo.cfg</span><br><span class="line">Starting zookeeper ... STARTED</span><br></pre></td></tr></table></figure>
-<p>状态<br>101<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# zkServer.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /usr/local/zookeeper-3.4.11/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br></pre></td></tr></table></figure></p>
-<p>102<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@mipay-cash-test1002 data]# zkServer.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /usr/local/zookeeper-3.4.11/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br></pre></td></tr></table></figure></p>
-<p>103<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@mipay-cash-test1003 data]# zkServer.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /usr/local/zookeeper-3.4.11/bin/../conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br></pre></td></tr></table></figure></p>
-<p>如果client连接，防火墙的2181端口要打开</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/08/29/zookeeper集群部署/" data-id="cjlg5ay0u0006ar6njd6pxd89" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hadoopException" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/12/24/hadoopException/" class="article-date">
-  <time datetime="2017-12-24T07:44:49.000Z" itemprop="datePublished">2017-12-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/24/hadoopException/">hadoop 异常</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<p>1.<code>org.apache.hadoop.ipc.RPC$VersionMismatch: Protocol org.apache.hadoop.hdfs.protocol.ClientP</code></p>
-<p>具体异常日志：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">org.apache.hadoop.ipc.RPC$VersionMismatch: Protocol org.apache.hadoop.hdfs.protocol.ClientProtocol version mismatch. (client = 42, server = 41)  </span><br><span class="line">        at org.apache.hadoop.ipc.RPC.getProxy(RPC.java:364)</span><br><span class="line">        at org.apache.hadoop.hdfs.DFSClient.createRPCNamenode(DFSClient.java:113)</span><br><span class="line">        at org.apache.hadoop.hdfs.DFSClient.&lt;init&gt;(DFSClient.java:215)</span><br><span class="line">        at org.apache.hadoop.hdfs.DFSClient.&lt;init&gt;(DFSClient.java:177)</span><br><span class="line">        at org.apache.hadoop.hdfs.DistributedFileSystem.initialize(DistributedFileSystem.java:82)</span><br><span class="line">        at org.apache.hadoop.fs.FileSystem.createFileSystem(FileSystem.java:1378)</span><br><span class="line">        at org.apache.hadoop.fs.FileSystem.access$200(FileSystem.java:66)</span><br><span class="line">        at org.apache.hadoop.fs.FileSystem$Cache.get(FileSystem.java:1390)</span><br><span class="line">        at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:196)</span><br><span class="line">        at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:95)</span><br><span class="line">        at org.apache.hadoop.hbase.master.MasterFileSystem.&lt;init&gt;(MasterFileSystem.java:87)</span><br><span class="line">        at org.apache.hadoop.hbase.master.HMaster.finishInitialization(HMaster.java:341)</span><br><span class="line">        at org.apache.hadoop.hbase.master.HMaster.run(HMaster.java:277)</span><br></pre></td></tr></table></figure></p>
-<p>原因：hadoop版本与Hadoop-core版本不一致</p>
-<p>解决方法：匹配一致</p>
-<p>2.<code>org.apache.Hadoop.ipc.Client: Retrying connect to server: Linux-hadoop-38/10.10.208.38:9000. Already tried 0 time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=10, sleepTime=1 SECONDS)</code></p>
-<p>原因：可能是防火墙拦截，或者9000端口监听的地址是localhost</p>
-<p>检查端口9000监听地址，命令<code>netstat -anp | grep 9000</code>打印</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(No info could be read for "-p": geteuid()=503 but you should be root.)</span><br><span class="line">tcp        0      0 ::ffff:127.0.0.1:9000       :::*                        LISTEN      -</span><br><span class="line">tcp        0      0 ::ffff:127.0.0.1:9000       ::ffff:127.0.0.1:40910      ESTABLISHED -</span><br><span class="line">tcp        0      0 ::ffff:127.0.0.1:40910      ::ffff:127.0.0.1:9000       ESTABLISHED -</span><br><span class="line">unix  2      [ ACC ]     STREAM     LISTENING     1022648 -                   /tmp/orbit-gdm/linc-16b2-0-125fb5609000c</span><br><span class="line">unix  3      [ ]         STREAM     CONNECTED     1022684 -                   /tmp/orbit-gdm/linc-16b2-0-125fb5609000c</span><br></pre></td></tr></table></figure>
-<p>解决方案：</p>
-<blockquote>
-<p>如果防火墙过滤了访问该端口的请求则设置过滤规则，放行该端口或者关闭防火墙;</p>
-<p>如果监听地址为本机地址则修改其监听地址为真是ip地址（如192.168.8.119）.<br>/etc/hosts配置文件中加入主机xxx和ip 192.168.xx.xxx的映射关系，<br>然后修改core-site.xml中fs.default.name的值为”hdfs://xxx:9000”</p>
-</blockquote>
-<p>3.<code>org.apache.hadoop.security.AccessControlException: Permission denied: user=***, access=WRITE, inode=&quot;/&quot;:root:supergroup:drwxr-xr-x</code></p>
-<p>原因，没有写权限</p>
-<p>解决方案：测试使用<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -chmod 777 /</span><br></pre></td></tr></table></figure></p>
-<p>待续。。。。。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/12/24/hadoopException/" data-id="cjlg5ay0n0002ar6n4i4h2dp9" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hadoop-exception/">hadoop, exception</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hadoop-config" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/12/24/hadoop-config/" class="article-date">
-  <time datetime="2017-12-24T07:40:09.000Z" itemprop="datePublished">2017-12-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/24/hadoop-config/">hadoop config</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<p>1.修改主机名和IP的映射关系：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts	</span><br><span class="line"></span><br><span class="line">10.239.11.28	heiheihei</span><br></pre></td></tr></table></figure></p>
-<p>2.安装jdk 略</p>
-<p>3.安装Hadoop 2.4.1<br>hadoop2.x的配置文件目录为：<code>$HADOOP_HOME/etc/hadoop</code><br>伪分布式需要修改5个配置文件</p>
-<p>3.1 配置Hadoop</p>
-<p><strong><em>hadoop-env.sh</em></strong></p>
-<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim hadoop-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8</span><br></pre></td></tr></table></figure>
-</code></pre><p><strong><em>core-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HADOOP所使用的文件系统schema（URI），HDFS的（NameNode）的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://heiheihei:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop-2.4.1/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>hdfs-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量,伪分布式就一个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>mapred-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定map-reduce运行在yarn上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong><em>yarn-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定YARN的（ResourceManager）的地址 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>heiheihei<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- reducer获取数据的方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.2 添加Hadoop环境变量<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proflie</span><br><span class="line">		export JAVA_HOME=/usr/java/jdk1.8</span><br><span class="line">		export HADOOP_HOME=/itcast/hadoop-2.4.1</span><br><span class="line">		export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br><span class="line"></span><br><span class="line">	source /etc/profile</span><br></pre></td></tr></table></figure></p>
-<p>3.3 格式化namenode（是对namenode进行初始化）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format (hadoop namenode -format)</span><br></pre></td></tr></table></figure></p>
-<p>3.4 启动Hadoop</p>
-<blockquote>
-<p>先启动HDFS<code>start-dfs.sh</code></p>
-<p>再启动YARN<code>start-yarn.sh</code></p>
-</blockquote>
-<p>3.5 验证登录</p>
-<p>使用jps命令验证</p>
-<blockquote>
-<p>NameNode</p>
-<p>Jps</p>
-<p>SecondaryNameNode</p>
-<p>NodeManager</p>
-<p>ResourceManager</p>
-<p>DataNode</p>
-</blockquote>
-<blockquote>
-<p><a href="http://10.239.11.28:50070" target="_blank" rel="noopener">http://10.239.11.28:50070</a> （HDFS管理界面）</p>
-<p><a href="http://10.239.11.28:8088" target="_blank" rel="noopener">http://10.239.11.28:8088</a> （MR管理界面）</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/12/24/hadoop-config/" data-id="cjlg5ay0e0000ar6nvgdritew" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hadoop/">hadoop</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Set" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Set" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/12/24/Set/" class="article-date">
   <time datetime="2017-12-24T06:03:50.000Z" itemprop="datePublished">2017-12-24</time>
@@ -268,8 +85,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/24/Set/">Set</a>
+    <h1 class="article-title" itemprop="name">
+      Set
     </h1>
   
 
@@ -356,11 +173,23 @@
     </footer>
   </div>
   
-</article>
-
+    
+<nav id="article-nav">
+  
+    <a href="/2017/12/24/hadoop-config/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hadoop config
+        
+      </div>
+    </a>
+  
+  
+</nav>
 
   
-
+</article>
 
 </section>
         
