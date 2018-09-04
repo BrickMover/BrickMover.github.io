@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="database," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="事务定义数据库事务 数据库事务：数据库读写的一个操作序列称为一次事务并发事务：多个用户同时操作同一数据或者同一范围内的数据并发控制：使用不同的事务隔离级别来控制事务并发  应用层事务 相应的每个线程调用服务的过程也是一次事务多个线程并发访问服务并发控制有同步（悲观锁），无锁CAS（乐观锁）  事务的特性 原子性Atomicity事务所包含的操作，要么成功，要么全部失败回滚。事务的操作如果成功就必">
+<meta name="keywords" content="database">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库事务详细讨论">
+<meta property="og:url" content="http://yoursite.com/2018/09/04/数据库事务详细讨论/index.html">
+<meta property="og:site_name" content="SlowDown">
+<meta property="og:description" content="事务定义数据库事务 数据库事务：数据库读写的一个操作序列称为一次事务并发事务：多个用户同时操作同一数据或者同一范围内的数据并发控制：使用不同的事务隔离级别来控制事务并发  应用层事务 相应的每个线程调用服务的过程也是一次事务多个线程并发访问服务并发控制有同步（悲观锁），无锁CAS（乐观锁）  事务的特性 原子性Atomicity事务所包含的操作，要么成功，要么全部失败回滚。事务的操作如果成功就必">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-04T15:59:37.141Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据库事务详细讨论">
+<meta name="twitter:description" content="事务定义数据库事务 数据库事务：数据库读写的一个操作序列称为一次事务并发事务：多个用户同时操作同一数据或者同一范围内的数据并发控制：使用不同的事务隔离级别来控制事务并发  应用层事务 相应的每个线程调用服务的过程也是一次事务多个线程并发访问服务并发控制有同步（悲观锁），无锁CAS（乐观锁）  事务的特性 原子性Atomicity事务所包含的操作，要么成功，要么全部失败回滚。事务的操作如果成功就必">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/04/数据库事务详细讨论/"/>
+
+
+
+
+
+  <title>数据库事务详细讨论 | SlowDown</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SlowDown</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">You can't judge a tree by its bark.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/04/数据库事务详细讨论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Itamar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SlowDown">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库事务详细讨论</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-04T21:52:09+08:00">
+                2018-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<h1 id="事务定义"><a href="#事务定义" class="headerlink" title="事务定义"></a>事务定义</h1><h2 id="数据库事务"><a href="#数据库事务" class="headerlink" title="数据库事务"></a>数据库事务</h2><blockquote>
+<p>数据库事务：数据库读写的一个操作序列称为一次事务<br>并发事务：多个用户同时操作同一数据或者同一范围内的数据<br>并发控制：使用不同的事务隔离级别来控制事务并发</p>
+</blockquote>
+<h2 id="应用层事务"><a href="#应用层事务" class="headerlink" title="应用层事务"></a>应用层事务</h2><blockquote>
+<p>相应的每个线程调用服务的过程也是一次事务<br>多个线程并发访问服务<br>并发控制有同步（悲观锁），无锁CAS（乐观锁）</p>
+</blockquote>
+<h1 id="事务的特性"><a href="#事务的特性" class="headerlink" title="事务的特性"></a>事务的特性</h1><blockquote>
+<p><strong>原子性Atomicity</strong><br>事务所包含的操作，要么成功，要么全部失败回滚。事务的操作如果成功就必须应用到数据库，否则不能对数据库产生任何影响<br><strong>一致性Consistency</strong><br>事务开始前和结束后，数据库的完整性约束没有被破坏<br><strong>隔离性Isolation</strong><br>多个并发事务相互隔离，互不干扰<br><strong>持久性Durability</strong><br>事务一但被提交，对于数据库的影响是永久性的，即使数据库故障也不会丢失（redolog）</p>
+</blockquote>
+<h1 id="数据库隔离级别"><a href="#数据库隔离级别" class="headerlink" title="数据库隔离级别"></a>数据库隔离级别</h1><h2 id="数据库中的锁"><a href="#数据库中的锁" class="headerlink" title="数据库中的锁"></a>数据库中的锁</h2><p>在讨论隔离级别之前，先看看数据库中的锁</p>
+<blockquote>
+<p><strong>共享锁 share lock</strong><br>读锁，事务给对象加了S锁之后，其他的事务只能加S锁，多个事务可以同时读，但不能写直到S锁释放<br><strong>排它锁 exclusive lock</strong><br>写锁，事务给对象加了X锁，其他事务只能等待其释放，当前事务具有读写权限</p>
+</blockquote>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><h3 id="read-uncommitted"><a href="#read-uncommitted" class="headerlink" title="read uncommitted"></a>read uncommitted</h3><p>产生问题：读脏，<em>两个事务，t1在事务中读取到了t2的数据的中间状态，但是t2未提交，发生了rollback，此时读到了脏数据</em><br>实现原理：<br>a.事务对当前读取的数据不加锁；<br>b.更新时加上行级共享锁（这里有的说是加了排它锁，排他锁的话其他事务没法读，应该是共享锁）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#client a</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> transation <span class="keyword">isolation</span> <span class="keyword">level</span> <span class="keyword">read</span> uncommitted;</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br><span class="line"></span><br><span class="line">#client b</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> transation <span class="keyword">isolation</span> <span class="keyword">level</span> <span class="keyword">read</span> uncommitted;</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">account</span> <span class="keyword">set</span> balance = balance - <span class="number">50</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">#client a 读脏</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br><span class="line"></span><br><span class="line">#client b</span><br><span class="line"><span class="keyword">rollback</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="read-committed"><a href="#read-committed" class="headerlink" title="read committed"></a>read committed</h3><p>解决了：脏读<br>产生问题：不可重复读，<em>t1事务在查询数据时，中间插入了一个事务t2对其做了更新，t1再次查询时，结果和第一次不一致</em>，其重点在对同一条数据读写上<br>实现原理：<br>a.事务读取当前数据加行级共享锁，读完立即释放（给了t2在t1中间提交的可能）<br>b.事务更新数据的瞬间，加行级排它锁，事务结束释放。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#client a</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> transation <span class="keyword">isolation</span> <span class="keyword">level</span> <span class="keyword">read</span> committed;</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br><span class="line"></span><br><span class="line">#client b</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> transation <span class="keyword">isolation</span> <span class="keyword">level</span> <span class="keyword">read</span> committed;</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">account</span> <span class="keyword">set</span> balance = balance - <span class="number">50</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">#client a， b未提交，不会脏读,MVCC 读取快照</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br><span class="line"></span><br><span class="line">#client b</span><br><span class="line"><span class="keyword">commit</span></span><br><span class="line"></span><br><span class="line">#<span class="keyword">client</span> a 与最先读取的不一致，不可重复读</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="repeatable-read"><a href="#repeatable-read" class="headerlink" title="repeatable read"></a>repeatable read</h3><p>解决了：不可重复读<br>产生问题：幻读，<em>在一个事务的两次查询中数据笔数不一致，例如有一个事务查询了几列(Row)数据，而另一个事务却在此时插入了新的几列数据，先前的事务在接下来的查询中，就会发现有几列数据是它先前所没有的。</em>其重点是在数据条目上，由其他事务插入引起。<br>实现原理：<br>a.事务读取当前数据加行级共享锁，事务结束后释放（不会有其他事务插入进来执行）<br>b.事务更新时，加行级排他锁，事务结束后释放（行级锁，插入不会受到行级共享锁的干扰）<br>这里有些文章写的是表级锁，如果是表级锁，在读取的过程中，其他事务是无法写入表的，应该是不对的，不知道理解的对不对</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#client a</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> transation <span class="keyword">isolation</span> <span class="keyword">level</span> repeatable <span class="keyword">read</span>;</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br><span class="line"></span><br><span class="line">#client b,事务不结束，a一直读快照</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> transation <span class="keyword">isolation</span> <span class="keyword">level</span> repeatable <span class="keyword">read</span>;</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">account</span> <span class="keyword">set</span> balance = balance - <span class="number">50</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">commit</span></span><br><span class="line"></span><br><span class="line">#<span class="keyword">client</span> a，a不提交一直读快照，解决不可重复读</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br><span class="line"></span><br><span class="line">#client b，插入</span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">account</span> <span class="keyword">values</span>(<span class="string">"lily"</span>, <span class="number">5000</span>);</span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"></span><br><span class="line">#client a,多出一条记录，幻读</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">account</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="Serilizable"><a href="#Serilizable" class="headerlink" title="Serilizable"></a>Serilizable</h3><p>解决幻读，不会产生上述问题<br>实现原理：<br>a.事务读取数据时，先加表级共享锁，事务结束释放<br>b.事务更新数据时，先加表级排它锁，事务结束释放</p>
+<p>有一点需要说明的是：这里的隔离级别实现都是工业标准，事实上mysql的实现是另外一种方式。</p>
+<h2 id="mysql实现read-committed和repeatable-read"><a href="#mysql实现read-committed和repeatable-read" class="headerlink" title="mysql实现read committed和repeatable read"></a>mysql实现read committed和repeatable read</h2><p>使用MVCC协同实现<br>1.读不影响写：事务以排他锁的形式修改原始数据，读时不加锁，因为MySQL在事务隔离级别Read committed、Repeatable Read下，InnoDB存储引擎采用非锁定性一致读－－即读取不占用和等待表上的锁。即采用的是MVCC中一致性非锁定读模式。因读时不加锁，所以不会阻塞其他事物在相同记录上加X锁来更改这行记录。<br>2.写不影响读：事务以排他锁的形式修改原始数据，当读取的行正在执行 delete 或者 update 操作，这时读取操作不会因此去等待行上锁的释放。相反地，InnoDB存储引擎会去读取行的一个快照数据。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢你的5毛</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Itamar 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Itamar 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/database/" rel="tag"># database</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/30/设计模式-二-、工厂方法模式FactoryMethod/" rel="next" title="设计模式(二)、工厂方法模式FactoryMethod">
+                <i class="fa fa-chevron-left"></i> 设计模式(二)、工厂方法模式FactoryMethod
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Itamar" />
+            
+              <p class="site-author-name" itemprop="name">Itamar</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#事务定义"><span class="nav-number">1.</span> <span class="nav-text">事务定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库事务"><span class="nav-number">1.1.</span> <span class="nav-text">数据库事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层事务"><span class="nav-number">1.2.</span> <span class="nav-text">应用层事务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事务的特性"><span class="nav-number">2.</span> <span class="nav-text">事务的特性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据库隔离级别"><span class="nav-number">3.</span> <span class="nav-text">数据库隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库中的锁"><span class="nav-number">3.1.</span> <span class="nav-text">数据库中的锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隔离级别"><span class="nav-number">3.2.</span> <span class="nav-text">隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#read-uncommitted"><span class="nav-number">3.2.1.</span> <span class="nav-text">read uncommitted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-committed"><span class="nav-number">3.2.2.</span> <span class="nav-text">read committed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#repeatable-read"><span class="nav-number">3.2.3.</span> <span class="nav-text">repeatable read</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serilizable"><span class="nav-number">3.2.4.</span> <span class="nav-text">Serilizable</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql实现read-committed和repeatable-read"><span class="nav-number">3.3.</span> <span class="nav-text">mysql实现read committed和repeatable read</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Itamar</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+-->
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+ -->
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共字</span>
+</div>
+<div class="powered-by">  
+  </div>
+<span>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
