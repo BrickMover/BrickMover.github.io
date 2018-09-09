@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="database," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
-<meta name="keywords" content="hadoop">
+<meta name="description" content="MVCC定义MVCC即Multi Version Concurrency Control：多版本并发控制技术，在一致性读中得到使用，将行锁和行的多个版本结合起来实现非锁定读，提高数据库的并发性能。 MVCC实现原理InnoDB存储的最基本row中包含一些额外的信息 每行6byteDB_TRX_ID标记最新更新（insert or update or delete）这条记录的transaction">
+<meta name="keywords" content="database">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop config">
-<meta property="og:url" content="http://yoursite.com/2017/12/24/hadoop-config/index.html">
+<meta property="og:title" content="MySql MVCC">
+<meta property="og:url" content="http://yoursite.com/2018/09/05/MySql-MVCC/index.html">
 <meta property="og:site_name" content="SlowDown">
-<meta property="og:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta property="og:description" content="MVCC定义MVCC即Multi Version Concurrency Control：多版本并发控制技术，在一致性读中得到使用，将行锁和行的多个版本结合起来实现非锁定读，提高数据库的并发性能。 MVCC实现原理InnoDB存储的最基本row中包含一些额外的信息 每行6byteDB_TRX_ID标记最新更新（insert or update or delete）这条记录的transaction">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-30T06:02:34.823Z">
+<meta property="og:updated_time" content="2018-09-05T15:32:08.900Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop config">
-<meta name="twitter:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta name="twitter:title" content="MySql MVCC">
+<meta name="twitter:description" content="MVCC定义MVCC即Multi Version Concurrency Control：多版本并发控制技术，在一致性读中得到使用，将行锁和行的多个版本结合起来实现非锁定读，提高数据库的并发性能。 MVCC实现原理InnoDB存储的最基本row中包含一些额外的信息 每行6byteDB_TRX_ID标记最新更新（insert or update or delete）这条记录的transaction">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/24/hadoop-config/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/05/MySql-MVCC/"/>
 
 
 
 
 
-  <title>hadoop config | SlowDown</title>
+  <title>MySql MVCC | SlowDown</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/hadoop-config/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/05/MySql-MVCC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Itamar">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hadoop config</h1>
+          <h1 class="post-title" itemprop="name headline">MySql MVCC</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T15:40:09+08:00">
-                2017-12-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-05T08:25:29+08:00">
+                2018-09-05
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
                   </a>
                 </span>
 
@@ -353,39 +353,20 @@
 
       
         <a id="more"></a>
-<p>1.修改主机名和IP的映射关系：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts	</span><br><span class="line"></span><br><span class="line">10.239.11.28	heiheihei</span><br></pre></td></tr></table></figure></p>
-<p>2.安装jdk 略</p>
-<p>3.安装Hadoop 2.4.1<br>hadoop2.x的配置文件目录为：<code>$HADOOP_HOME/etc/hadoop</code><br>伪分布式需要修改5个配置文件</p>
-<p>3.1 配置Hadoop</p>
-<p><strong><em>hadoop-env.sh</em></strong></p>
-<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim hadoop-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8</span><br></pre></td></tr></table></figure>
-</code></pre><p><strong><em>core-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HADOOP所使用的文件系统schema（URI），HDFS的（NameNode）的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://heiheihei:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop-2.4.1/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>hdfs-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量,伪分布式就一个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>mapred-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定map-reduce运行在yarn上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong><em>yarn-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定YARN的（ResourceManager）的地址 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>heiheihei<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- reducer获取数据的方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.2 添加Hadoop环境变量<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proflie</span><br><span class="line">		export JAVA_HOME=/usr/java/jdk1.8</span><br><span class="line">		export HADOOP_HOME=/itcast/hadoop-2.4.1</span><br><span class="line">		export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br><span class="line"></span><br><span class="line">	source /etc/profile</span><br></pre></td></tr></table></figure></p>
-<p>3.3 格式化namenode（是对namenode进行初始化）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format (hadoop namenode -format)</span><br></pre></td></tr></table></figure></p>
-<p>3.4 启动Hadoop</p>
-<blockquote>
-<p>先启动HDFS<code>start-dfs.sh</code></p>
-<p>再启动YARN<code>start-yarn.sh</code></p>
+<h1 id="MVCC定义"><a href="#MVCC定义" class="headerlink" title="MVCC定义"></a>MVCC定义</h1><p>MVCC即Multi Version Concurrency Control：多版本并发控制技术，在一致性读中得到使用，将行锁和行的多个版本结合起来实现非锁定读，提高数据库的并发性能。</p>
+<h1 id="MVCC实现原理"><a href="#MVCC实现原理" class="headerlink" title="MVCC实现原理"></a>MVCC实现原理</h1><h2 id="InnoDB存储的最基本row中包含一些额外的信息"><a href="#InnoDB存储的最基本row中包含一些额外的信息" class="headerlink" title="InnoDB存储的最基本row中包含一些额外的信息"></a>InnoDB存储的最基本row中包含一些额外的信息</h2><blockquote>
+<p>每行6byte<code>DB_TRX_ID</code>标记最新更新（insert or update or delete）这条记录的transaction id每处理一个事务，其值自动+1<br>每行7byte<code>DB_ROLL_PTR</code>，roll pointer，指向当前记录项的rollback segment的undo log，undo log记录了更新之前该行数据<br>每行6byte<code>DB_ROW_ID</code>，如果InnoDB自动产生聚集索引，聚集索引包括这个值，否则不会在任何行中出现该值。<br>DELETE BIT位用于标识该记录是否被删除，这里的不是真正的删除数据，而是标志出来的删除。真正意义的删除是在commit的时候</p>
 </blockquote>
-<p>3.5 验证登录</p>
-<p>使用jps命令验证</p>
-<blockquote>
-<p>NameNode</p>
-<p>Jps</p>
-<p>SecondaryNameNode</p>
-<p>NodeManager</p>
-<p>ResourceManager</p>
-<p>DataNode</p>
+<h2 id="Undo-log"><a href="#Undo-log" class="headerlink" title="Undo log"></a>Undo log</h2><p>undo log在rollback segment分为insert 和update undo log。insert undo logs只在回滚时被需要，一旦事务提交，就可以立即丢弃。<br>Update undo logs在一致性读中也被使用，只有在InnoDB没有分配快照事务之后才可以丢弃，因为在一致性读中可能需要update undo log来创建数据库行的早起版本</p>
+<p>#MVCC反思</p>
+<p>在更新前建立undo log，根据各种策略读时非阻塞就是MVCC，undo log中的行就是版本</p>
+<h2 id="一般MVCC的特点"><a href="#一般MVCC的特点" class="headerlink" title="一般MVCC的特点"></a>一般MVCC的特点</h2><blockquote>
+<p>每行数据都存在一个版本，每次数据更新时都更新该版本<br>修改时，copy出当前版本，各个事务不干扰<br>保存时，比较版本号，如果成功提交，就覆盖原纪录，否则回滚</p>
 </blockquote>
-<blockquote>
-<p><a href="http://10.239.11.28:50070" target="_blank" rel="noopener">http://10.239.11.28:50070</a> （HDFS管理界面）</p>
-<p><a href="http://10.239.11.28:8088" target="_blank" rel="noopener">http://10.239.11.28:8088</a> （MR管理界面）</p>
+<h2 id="InnoDB实现方式"><a href="#InnoDB实现方式" class="headerlink" title="InnoDB实现方式"></a>InnoDB实现方式</h2><blockquote>
+<p>事务以排它锁的方式修改原始数据<br>把修改前的数据放在undo log中，主数据通过回滚指针关联<br>修改成功，则不用做啥，失败回滚，恢复undo log中数据</p>
 </blockquote>
+<p>理想MVCC难以实现的根本原因在于企图通过乐观锁代替二段提交。修改两行数据，但为了保证其一致性，与修改两个分布式系统中的数据并无区别，而二提交是目前这种场景保证一致性的唯一手段。二段提交的本质是锁定，乐观锁的本质是消除锁定，二者矛盾，故理想的MVCC难以真正在实际中被应用，Innodb只是借了MVCC这个名字，提供了读的非阻塞而已。</p>
 
       
     </div>
@@ -432,7 +413,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/database/" rel="tag"># database</a>
           
         </div>
       
@@ -445,14 +426,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/09/04/数据库事务详细讨论/" rel="next" title="数据库事务详细讨论">
+                <i class="fa fa-chevron-left"></i> 数据库事务详细讨论
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/24/hadoopException/" rel="prev" title="hadoop 异常">
-                hadoop 异常 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/09/JVM内存管理/" rel="prev" title="JVM内存管理">
+                JVM内存管理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -505,8 +490,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -572,6 +566,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MVCC定义"><span class="nav-number">1.</span> <span class="nav-text">MVCC定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVCC实现原理"><span class="nav-number">2.</span> <span class="nav-text">MVCC实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB存储的最基本row中包含一些额外的信息"><span class="nav-number">2.1.</span> <span class="nav-text">InnoDB存储的最基本row中包含一些额外的信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Undo-log"><span class="nav-number">2.2.</span> <span class="nav-text">Undo log</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一般MVCC的特点"><span class="nav-number">2.3.</span> <span class="nav-text">一般MVCC的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB实现方式"><span class="nav-number">2.4.</span> <span class="nav-text">InnoDB实现方式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

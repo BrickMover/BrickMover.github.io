@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="jvm," />
 
 
 
@@ -79,18 +79,22 @@
 
 
 
-<meta name="description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
-<meta name="keywords" content="hadoop">
+<meta name="description" content="对象创建的过程 内存分配分配内存时要注意两个关键环节：1.如何分配内存；2.修改指针如何实现线程安全 内存规整：一个分解指针恰好分割了已有内存和空闲内存    名词 说明     内存规整 使用”指针碰撞的方式“将空闲部分的指针移动分配内存大小相等的距离   内存不规整 虚拟机需要一个表去记录哪些内存块可用，然后从中选择足够的空间分配给要申请对象的实例    保证指针修改线程安全的策略   对内">
+<meta name="keywords" content="jvm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop config">
-<meta property="og:url" content="http://yoursite.com/2017/12/24/hadoop-config/index.html">
+<meta property="og:title" content="对象的创建与访问">
+<meta property="og:url" content="http://yoursite.com/2018/09/09/对象的创建与访问/index.html">
 <meta property="og:site_name" content="SlowDown">
-<meta property="og:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta property="og:description" content="对象创建的过程 内存分配分配内存时要注意两个关键环节：1.如何分配内存；2.修改指针如何实现线程安全 内存规整：一个分解指针恰好分割了已有内存和空闲内存    名词 说明     内存规整 使用”指针碰撞的方式“将空闲部分的指针移动分配内存大小相等的距离   内存不规整 虚拟机需要一个表去记录哪些内存块可用，然后从中选择足够的空间分配给要申请对象的实例    保证指针修改线程安全的策略   对内">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-30T06:02:34.823Z">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/%E9%80%9A%E8%BF%87%E5%8F%A5%E6%9F%84%E8%AE%BF%E9%97%AE.png">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE.png">
+<meta property="og:updated_time" content="2018-09-09T07:27:35.038Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop config">
-<meta name="twitter:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta name="twitter:title" content="对象的创建与访问">
+<meta name="twitter:description" content="对象创建的过程 内存分配分配内存时要注意两个关键环节：1.如何分配内存；2.修改指针如何实现线程安全 内存规整：一个分解指针恰好分割了已有内存和空闲内存    名词 说明     内存规整 使用”指针碰撞的方式“将空闲部分的指针移动分配内存大小相等的距离   内存不规整 虚拟机需要一个表去记录哪些内存块可用，然后从中选择足够的空间分配给要申请对象的实例    保证指针修改线程安全的策略   对内">
+<meta name="twitter:image" content="http://p1791xv5d.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/24/hadoop-config/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/09/对象的创建与访问/"/>
 
 
 
 
 
-  <title>hadoop config | SlowDown</title>
+  <title>对象的创建与访问 | SlowDown</title>
   
 
 
@@ -263,7 +267,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/hadoop-config/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/09/对象的创建与访问/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Itamar">
@@ -280,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hadoop config</h1>
+          <h1 class="post-title" itemprop="name headline">对象的创建与访问</h1>
         
 
         <div class="post-meta">
@@ -292,8 +296,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T15:40:09+08:00">
-                2017-12-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-09T14:12:56+08:00">
+                2018-09-09
               </time>
             
 
@@ -315,8 +319,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/jvm管理与优化/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm管理与优化</span>
                   </a>
                 </span>
 
@@ -353,39 +357,64 @@
 
       
         <a id="more"></a>
-<p>1.修改主机名和IP的映射关系：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts	</span><br><span class="line"></span><br><span class="line">10.239.11.28	heiheihei</span><br></pre></td></tr></table></figure></p>
-<p>2.安装jdk 略</p>
-<p>3.安装Hadoop 2.4.1<br>hadoop2.x的配置文件目录为：<code>$HADOOP_HOME/etc/hadoop</code><br>伪分布式需要修改5个配置文件</p>
-<p>3.1 配置Hadoop</p>
-<p><strong><em>hadoop-env.sh</em></strong></p>
-<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim hadoop-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8</span><br></pre></td></tr></table></figure>
-</code></pre><p><strong><em>core-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HADOOP所使用的文件系统schema（URI），HDFS的（NameNode）的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://heiheihei:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop-2.4.1/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>hdfs-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量,伪分布式就一个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>mapred-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定map-reduce运行在yarn上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong><em>yarn-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定YARN的（ResourceManager）的地址 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>heiheihei<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- reducer获取数据的方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.2 添加Hadoop环境变量<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proflie</span><br><span class="line">		export JAVA_HOME=/usr/java/jdk1.8</span><br><span class="line">		export HADOOP_HOME=/itcast/hadoop-2.4.1</span><br><span class="line">		export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br><span class="line"></span><br><span class="line">	source /etc/profile</span><br></pre></td></tr></table></figure></p>
-<p>3.3 格式化namenode（是对namenode进行初始化）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format (hadoop namenode -format)</span><br></pre></td></tr></table></figure></p>
-<p>3.4 启动Hadoop</p>
+<h1 id="对象创建的过程"><a href="#对象创建的过程" class="headerlink" title="对象创建的过程"></a>对象创建的过程</h1><p><img src="http://p1791xv5d.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png" alt=""></p>
+<h2 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h2><p>分配内存时要注意两个关键环节：1.如何分配内存；2.修改指针如何实现线程安全</p>
+<p><strong>内存规整：一个分解指针恰好分割了已有内存和空闲内存</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">名词</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">内存规整</td>
+<td style="text-align:center">使用”指针碰撞的方式“将空闲部分的指针移动分配内存大小相等的距离</td>
+</tr>
+<tr>
+<td style="text-align:right">内存不规整</td>
+<td style="text-align:center">虚拟机需要一个表去记录哪些内存块可用，然后从中选择足够的空间分配给要申请对象的实例</td>
+</tr>
+</tbody>
+</table>
+<p>保证指针修改线程安全的策略</p>
 <blockquote>
-<p>先启动HDFS<code>start-dfs.sh</code></p>
-<p>再启动YARN<code>start-yarn.sh</code></p>
+<ol>
+<li>对内存分配的动作进行同步处理，采用CAS配上失败重试的方式保证更新的原子操作</li>
+<li>本地线程分配内存(Thread local allocation buffer),将内存分配动作按照线程划分到不同的空间进行，即<strong>Java堆中预先分配一小块内存</strong>，哪个线程需要分配，就在那个线程的TLAB上进行，<strong>只有当TLAB用完，需要分配新的TLAB时，才需要同步锁定</strong></li>
+</ol>
 </blockquote>
-<p>3.5 验证登录</p>
-<p>使用jps命令验证</p>
+<h2 id="初始化设置"><a href="#初始化设置" class="headerlink" title="初始化设置"></a>初始化设置</h2><p>内存分配完成后，虚拟机将分配好的内存初始化为0值，除了对象头，如果使用TLAB，这一过程也可以提前至TLAB分配时进行。new完以后立即执行init方法，把对象按照程序员的意愿进行初始化，这样一个真正可用的对象才产生。</p>
+<h2 id="对象结构"><a href="#对象结构" class="headerlink" title="对象结构"></a>对象结构</h2><table>
+<thead>
+<tr>
+<th style="text-align:right">结构</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">对象头head</td>
+<td style="text-align:center">第一部分：自身的运行时数据(hashCode, GC分代年龄，锁标志，线程持有的锁，偏向线程ID，偏向时间戳)第二部分：类型指针，虚拟机通过该指针判断这个对象是哪个类的实例</td>
+</tr>
+<tr>
+<td style="text-align:right">实例数据instance data</td>
+<td style="text-align:center">对象真正存储的有效信息，程序代码中所定义的各种类型的字段内容，无论是父类中继承的，还是子类中定义的，都要记录，默认策略：longs/doubles ,ints,shorts/chars,bytes/booleans,oops(Ordernary Object Pointers)</td>
+</tr>
+<tr>
+<td style="text-align:right">对象对其填充padding</td>
+<td style="text-align:center">并不是必然存在，由于HotSpot VM自动管理要求对象起始地址必须是8字节的整数倍，即对象大小必须是8字节的整数倍，没对齐时就需要补充</td>
+</tr>
+</tbody>
+</table>
+<h1 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h1><h2 id="使用句柄"><a href="#使用句柄" class="headerlink" title="使用句柄"></a>使用句柄</h2><p>reference中存放的是<strong>最稳定的句柄地址</strong>，对象被移动时只会改变句柄中的实例数据指针，reference不会被修改。<br>Java堆会划分一块区域作为句柄池，保存对象的句柄地址，句柄存放到对象的实例地址和到对象的类型数据的指针。</p>
+<p>如图所示：<br><img src="http://p1791xv5d.bkt.clouddn.com/%E9%80%9A%E8%BF%87%E5%8F%A5%E6%9F%84%E8%AE%BF%E9%97%AE.png" alt=""></p>
+<h2 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h2><p>访问快，不需要二次寻址（Hotspot采用该种方式）</p>
 <blockquote>
-<p>NameNode</p>
-<p>Jps</p>
-<p>SecondaryNameNode</p>
-<p>NodeManager</p>
-<p>ResourceManager</p>
-<p>DataNode</p>
+<p>堆对象的布局必须考虑如何放置类型数据的访问<br>reference中存放的直接是对象地址</p>
 </blockquote>
-<blockquote>
-<p><a href="http://10.239.11.28:50070" target="_blank" rel="noopener">http://10.239.11.28:50070</a> （HDFS管理界面）</p>
-<p><a href="http://10.239.11.28:8088" target="_blank" rel="noopener">http://10.239.11.28:8088</a> （MR管理界面）</p>
-</blockquote>
+<p>如图所示：<br><img src="http://p1791xv5d.bkt.clouddn.com/%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE.png" alt=""></p>
 
       
     </div>
@@ -432,7 +461,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/jvm/" rel="tag"># jvm</a>
           
         </div>
       
@@ -445,14 +474,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/09/09/JVM内存管理/" rel="next" title="JVM内存管理">
+                <i class="fa fa-chevron-left"></i> JVM内存管理
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/24/hadoopException/" rel="prev" title="hadoop 异常">
-                hadoop 异常 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/09/垃圾回收GC/" rel="prev" title="垃圾回收GC">
+                垃圾回收GC <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -505,8 +538,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -572,6 +614,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象创建的过程"><span class="nav-number">1.</span> <span class="nav-text">对象创建的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存分配"><span class="nav-number">1.1.</span> <span class="nav-text">内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化设置"><span class="nav-number">1.2.</span> <span class="nav-text">初始化设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象结构"><span class="nav-number">1.3.</span> <span class="nav-text">对象结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对象的访问定位"><span class="nav-number">2.</span> <span class="nav-text">对象的访问定位</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用句柄"><span class="nav-number">2.1.</span> <span class="nav-text">使用句柄</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#直接访问"><span class="nav-number">2.2.</span> <span class="nav-text">直接访问</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

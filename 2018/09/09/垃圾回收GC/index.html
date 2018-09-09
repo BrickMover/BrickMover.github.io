@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="jvm gc," />
 
 
 
@@ -79,18 +79,22 @@
 
 
 
-<meta name="description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
-<meta name="keywords" content="hadoop">
+<meta name="description" content="对象存活判断引用计数法给对象添加一个引用计数器，每当一个地方引用它时，计数器值+1；当引用失效时，计数器值-1；任何计数器值为0的对象就是不可能再被使用。（Python使用的引用计数法，Java不适合使用该算法，因为很难处理对象之间的相互引用） 可达性分析算法 Java，C#，Lisp这些主流的商用程序语言基本使用的是可达性分析判定对象是否存活 基本思路：通过GC Roots的对象作为起点，然后">
+<meta name="keywords" content="jvm gc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop config">
-<meta property="og:url" content="http://yoursite.com/2017/12/24/hadoop-config/index.html">
+<meta property="og:title" content="垃圾回收GC">
+<meta property="og:url" content="http://yoursite.com/2018/09/09/垃圾回收GC/index.html">
 <meta property="og:site_name" content="SlowDown">
-<meta property="og:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta property="og:description" content="对象存活判断引用计数法给对象添加一个引用计数器，每当一个地方引用它时，计数器值+1；当引用失效时，计数器值-1；任何计数器值为0的对象就是不可能再被使用。（Python使用的引用计数法，Java不适合使用该算法，因为很难处理对象之间的相互引用） 可达性分析算法 Java，C#，Lisp这些主流的商用程序语言基本使用的是可达性分析判定对象是否存活 基本思路：通过GC Roots的对象作为起点，然后">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-30T06:02:34.823Z">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95.png">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/markSweep.png">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/mark-compact.png">
+<meta property="og:updated_time" content="2018-09-09T14:53:27.610Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop config">
-<meta name="twitter:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta name="twitter:title" content="垃圾回收GC">
+<meta name="twitter:description" content="对象存活判断引用计数法给对象添加一个引用计数器，每当一个地方引用它时，计数器值+1；当引用失效时，计数器值-1；任何计数器值为0的对象就是不可能再被使用。（Python使用的引用计数法，Java不适合使用该算法，因为很难处理对象之间的相互引用） 可达性分析算法 Java，C#，Lisp这些主流的商用程序语言基本使用的是可达性分析判定对象是否存活 基本思路：通过GC Roots的对象作为起点，然后">
+<meta name="twitter:image" content="http://p1791xv5d.bkt.clouddn.com/%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95.png">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/24/hadoop-config/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/09/垃圾回收GC/"/>
 
 
 
 
 
-  <title>hadoop config | SlowDown</title>
+  <title>垃圾回收GC | SlowDown</title>
   
 
 
@@ -263,7 +267,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/hadoop-config/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/09/垃圾回收GC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Itamar">
@@ -280,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hadoop config</h1>
+          <h1 class="post-title" itemprop="name headline">垃圾回收GC</h1>
         
 
         <div class="post-meta">
@@ -292,8 +296,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T15:40:09+08:00">
-                2017-12-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-09T21:18:35+08:00">
+                2018-09-09
               </time>
             
 
@@ -315,8 +319,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/jvm管理与优化/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm管理与优化</span>
                   </a>
                 </span>
 
@@ -353,39 +357,63 @@
 
       
         <a id="more"></a>
-<p>1.修改主机名和IP的映射关系：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts	</span><br><span class="line"></span><br><span class="line">10.239.11.28	heiheihei</span><br></pre></td></tr></table></figure></p>
-<p>2.安装jdk 略</p>
-<p>3.安装Hadoop 2.4.1<br>hadoop2.x的配置文件目录为：<code>$HADOOP_HOME/etc/hadoop</code><br>伪分布式需要修改5个配置文件</p>
-<p>3.1 配置Hadoop</p>
-<p><strong><em>hadoop-env.sh</em></strong></p>
-<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim hadoop-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8</span><br></pre></td></tr></table></figure>
-</code></pre><p><strong><em>core-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HADOOP所使用的文件系统schema（URI），HDFS的（NameNode）的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://heiheihei:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop-2.4.1/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>hdfs-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量,伪分布式就一个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>mapred-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定map-reduce运行在yarn上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong><em>yarn-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定YARN的（ResourceManager）的地址 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>heiheihei<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- reducer获取数据的方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.2 添加Hadoop环境变量<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proflie</span><br><span class="line">		export JAVA_HOME=/usr/java/jdk1.8</span><br><span class="line">		export HADOOP_HOME=/itcast/hadoop-2.4.1</span><br><span class="line">		export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br><span class="line"></span><br><span class="line">	source /etc/profile</span><br></pre></td></tr></table></figure></p>
-<p>3.3 格式化namenode（是对namenode进行初始化）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format (hadoop namenode -format)</span><br></pre></td></tr></table></figure></p>
-<p>3.4 启动Hadoop</p>
+<h1 id="对象存活判断"><a href="#对象存活判断" class="headerlink" title="对象存活判断"></a>对象存活判断</h1><h2 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h2><p>给对象添加一个引用计数器，每当一个地方引用它时，计数器值+1；当引用失效时，计数器值-1；任何计数器值为0的对象就是不可能再被使用。（Python使用的引用计数法，Java不适合使用该算法，因为很难处理对象之间的相互引用）</p>
+<h2 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h2><p><img src="http://p1791xv5d.bkt.clouddn.com/%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95.png" alt=""></p>
+<p>Java，C#，Lisp这些主流的商用程序语言基本使用的是<strong>可达性分析</strong>判定对象是否存活</p>
+<p>基本思路：通过GC Roots的对象作为起点，然后向下搜索，搜索走过的路径成为<strong>引用链</strong>。当一个对象到GC Roots没有任何引用链相连，说明此对象不可用。（上图中Object5，Object6，Object7虽然相互关联，但是它们到GC Roots是不可达的，所以将会被判定为可回收对象）</p>
+<p>在Java中可作为GC Roots的的对象包括以下几种：</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表/局部变量表）中的引用对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI引用的对象</li>
+</ul>
+<p>在可达性分析算法中不可达的对象，也并不是“非死不可”，暂时处于缓存阶段，真正宣告一个对象死亡要至少经历两次标记过程。</p>
+<hr>
+<h1 id="GC算法"><a href="#GC算法" class="headerlink" title="GC算法"></a>GC算法</h1><h2 id="标记清除法-Mark-sweep"><a href="#标记清除法-Mark-sweep" class="headerlink" title="标记清除法 Mark sweep"></a>标记清除法 Mark sweep</h2><p>步骤：</p>
 <blockquote>
-<p>先启动HDFS<code>start-dfs.sh</code></p>
-<p>再启动YARN<code>start-yarn.sh</code></p>
+<ul>
+<li>首先标记出需要清理的对象；</li>
+<li>标记完成后，统一回收所有被标记的对象。</li>
+</ul>
 </blockquote>
-<p>3.5 验证登录</p>
-<p>使用jps命令验证</p>
-<blockquote>
-<p>NameNode</p>
-<p>Jps</p>
-<p>SecondaryNameNode</p>
-<p>NodeManager</p>
-<p>ResourceManager</p>
-<p>DataNode</p>
-</blockquote>
-<blockquote>
-<p><a href="http://10.239.11.28:50070" target="_blank" rel="noopener">http://10.239.11.28:50070</a> （HDFS管理界面）</p>
-<p><a href="http://10.239.11.28:8088" target="_blank" rel="noopener">http://10.239.11.28:8088</a> （MR管理界面）</p>
-</blockquote>
+<p><img src="http://p1791xv5d.bkt.clouddn.com/markSweep.png" alt=""></p>
+<p>该算法的不足：</p>
+<ul>
+<li>效率问题：标记和清除这两个过程的效率都不高</li>
+<li>空间问题：标记清除之后会产生大量的内存碎片，会造成后续分配大内存对象时无法得到足够空间，不得不进行一次GC</li>
+</ul>
+<h2 id="复制算法Coping"><a href="#复制算法Coping" class="headerlink" title="复制算法Coping"></a>复制算法Coping</h2><p>堆：</p>
+<ul>
+<li>新生代<ul>
+<li>den：伊甸园</li>
+<li>Survivor：存活区</li>
+</ul>
+</li>
+<li>老年代<ul>
+<li>Turned Gen</li>
+</ul>
+</li>
+</ul>
+<p><strong>复制算法</strong>：将可用的内存空间按容量大小分为相等的两块，每次只使用一块。当一块内存使用完了，将还存活的的内存复制到另外一块，然后将使用过的这块一次性清除。</p>
+<p><strong>这种简单的复制算法，牺牲空间为代价，收获高效。</strong></p>
+<p><strong>商业虚拟机</strong>采用这种方式来回收新生代，但并不是1:1的比例来划分内存空间，而是:</p>
+<ul>
+<li>按照survivor:survivor:Eden=1:1:8去分配，每次使用Eden和一块Survivor空间;</li>
+<li>回收时，将存活的对象复制到另外一块没有使用的Survivor，清理Eden和Survivor;</li>
+<li>因为没有办法保证每次回收都只有不超过10%的对象存活，当空闲的Survivor空间不够时，使用老年代做分配担保。</li>
+</ul>
+<h2 id="标记整理算法Mark-Compact"><a href="#标记整理算法Mark-Compact" class="headerlink" title="标记整理算法Mark-Compact"></a>标记整理算法Mark-Compact</h2><p>复制收集算法在对象存活率高的情况下，效率将会降低，如果不浪费50%的空间，还需要额外空间担保。</p>
+<ul>
+<li>标记整理算法与标记清除算法第一步是一样的；</li>
+<li>第二步，让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</li>
+</ul>
+<p><img src="http://p1791xv5d.bkt.clouddn.com/mark-compact.png" alt=""></p>
+<h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>当前商业虚拟机都采用“分代收集Generational Collection”算法。一般把Java堆分为新生代和老年代，<strong>根据各个年代的特点采用最适当的收集算法</strong>。</p>
+<ul>
+<li>新生代，每次垃圾收集时都发现有大批对象死去，只有少量存活，选用复制算法，复制成本低</li>
+<li>老年代，对象存活率高、没有额外空间对它进行分配担保，就必须使用“标志清理”或者“标记-整理”算法来进行回收</li>
+</ul>
 
       
     </div>
@@ -432,7 +460,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/jvm-gc/" rel="tag"># jvm gc</a>
           
         </div>
       
@@ -445,15 +473,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/09/09/对象的创建与访问/" rel="next" title="对象的创建与访问">
+                <i class="fa fa-chevron-left"></i> 对象的创建与访问
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/24/hadoopException/" rel="prev" title="hadoop 异常">
-                hadoop 异常 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -505,8 +533,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -572,6 +609,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象存活判断"><span class="nav-number">1.</span> <span class="nav-text">对象存活判断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引用计数法"><span class="nav-number">1.1.</span> <span class="nav-text">引用计数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可达性分析算法"><span class="nav-number">1.2.</span> <span class="nav-text">可达性分析算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GC算法"><span class="nav-number">2.</span> <span class="nav-text">GC算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#标记清除法-Mark-sweep"><span class="nav-number">2.1.</span> <span class="nav-text">标记清除法 Mark sweep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制算法Coping"><span class="nav-number">2.2.</span> <span class="nav-text">复制算法Coping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标记整理算法Mark-Compact"><span class="nav-number">2.3.</span> <span class="nav-text">标记整理算法Mark-Compact</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分代收集算法"><span class="nav-number">2.4.</span> <span class="nav-text">分代收集算法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="jvm," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
-<meta name="keywords" content="hadoop">
+<meta name="description" content="一些参数Java启动参数分类  标准参数（-），所有的jvm实现都必须实现这些参数的功能，并且向后兼容； 非标准参数（-X），默认jvm实现这些功能，但不保证所有jvm都满足，且不保证向后兼容； 非Stable参数（-XX），此类jvm参数实现会有所不同，将来会随时取消。-XX:-HeapDumpOnOutOfMemoryError当首次遭遇OOM时导出此时堆快照相关信息   一些常用参数">
+<meta name="keywords" content="jvm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop config">
-<meta property="og:url" content="http://yoursite.com/2017/12/24/hadoop-config/index.html">
+<meta property="og:title" content="JVM内存管理">
+<meta property="og:url" content="http://yoursite.com/2018/09/09/JVM内存管理/index.html">
 <meta property="og:site_name" content="SlowDown">
-<meta property="og:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta property="og:description" content="一些参数Java启动参数分类  标准参数（-），所有的jvm实现都必须实现这些参数的功能，并且向后兼容； 非标准参数（-X），默认jvm实现这些功能，但不保证所有jvm都满足，且不保证向后兼容； 非Stable参数（-XX），此类jvm参数实现会有所不同，将来会随时取消。-XX:-HeapDumpOnOutOfMemoryError当首次遭遇OOM时导出此时堆快照相关信息   一些常用参数">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-30T06:02:34.823Z">
+<meta property="og:image" content="http://p1791xv5d.bkt.clouddn.com/jvm%E5%86%85%E5%AD%98%E5%9B%BE.png">
+<meta property="og:updated_time" content="2018-09-09T03:26:32.124Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop config">
-<meta name="twitter:description" content="1.修改主机名和IP的映射关系：123vim /etc/hosts	10.239.11.28	heiheihei 2.安装jdk 略 3.安装Hadoop 2.4.1hadoop2.x的配置文件目录为：$HADOOP_HOME/etc/hadoop伪分布式需要修改5个配置文件 3.1 配置Hadoop hadoop-env.sh 123vim hadoop-env.shexport JAVA_H">
+<meta name="twitter:title" content="JVM内存管理">
+<meta name="twitter:description" content="一些参数Java启动参数分类  标准参数（-），所有的jvm实现都必须实现这些参数的功能，并且向后兼容； 非标准参数（-X），默认jvm实现这些功能，但不保证所有jvm都满足，且不保证向后兼容； 非Stable参数（-XX），此类jvm参数实现会有所不同，将来会随时取消。-XX:-HeapDumpOnOutOfMemoryError当首次遭遇OOM时导出此时堆快照相关信息   一些常用参数">
+<meta name="twitter:image" content="http://p1791xv5d.bkt.clouddn.com/jvm%E5%86%85%E5%AD%98%E5%9B%BE.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/24/hadoop-config/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/09/JVM内存管理/"/>
 
 
 
 
 
-  <title>hadoop config | SlowDown</title>
+  <title>JVM内存管理 | SlowDown</title>
   
 
 
@@ -263,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/hadoop-config/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/09/JVM内存管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Itamar">
@@ -280,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hadoop config</h1>
+          <h1 class="post-title" itemprop="name headline">JVM内存管理</h1>
         
 
         <div class="post-meta">
@@ -292,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T15:40:09+08:00">
-                2017-12-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-09T10:27:33+08:00">
+                2018-09-09
               </time>
             
 
@@ -315,8 +317,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/jvm管理与优化/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm管理与优化</span>
                   </a>
                 </span>
 
@@ -353,38 +355,88 @@
 
       
         <a id="more"></a>
-<p>1.修改主机名和IP的映射关系：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts	</span><br><span class="line"></span><br><span class="line">10.239.11.28	heiheihei</span><br></pre></td></tr></table></figure></p>
-<p>2.安装jdk 略</p>
-<p>3.安装Hadoop 2.4.1<br>hadoop2.x的配置文件目录为：<code>$HADOOP_HOME/etc/hadoop</code><br>伪分布式需要修改5个配置文件</p>
-<p>3.1 配置Hadoop</p>
-<p><strong><em>hadoop-env.sh</em></strong></p>
-<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim hadoop-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8</span><br></pre></td></tr></table></figure>
-</code></pre><p><strong><em>core-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HADOOP所使用的文件系统schema（URI），HDFS的（NameNode）的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://heiheihei:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop-2.4.1/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>hdfs-site.xml</em></strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量,伪分布式就一个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong><em>mapred-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定map-reduce运行在yarn上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong><em>yarn-site.xml</em></strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定YARN的（ResourceManager）的地址 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>heiheihei<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- reducer获取数据的方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.2 添加Hadoop环境变量<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proflie</span><br><span class="line">		export JAVA_HOME=/usr/java/jdk1.8</span><br><span class="line">		export HADOOP_HOME=/itcast/hadoop-2.4.1</span><br><span class="line">		export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br><span class="line"></span><br><span class="line">	source /etc/profile</span><br></pre></td></tr></table></figure></p>
-<p>3.3 格式化namenode（是对namenode进行初始化）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format (hadoop namenode -format)</span><br></pre></td></tr></table></figure></p>
-<p>3.4 启动Hadoop</p>
-<blockquote>
-<p>先启动HDFS<code>start-dfs.sh</code></p>
-<p>再启动YARN<code>start-yarn.sh</code></p>
+<h1 id="一些参数"><a href="#一些参数" class="headerlink" title="一些参数"></a>一些参数</h1><h2 id="Java启动参数分类"><a href="#Java启动参数分类" class="headerlink" title="Java启动参数分类"></a>Java启动参数分类</h2><blockquote>
+<ol>
+<li>标准参数（-），所有的jvm实现都必须实现这些参数的功能，并且向后兼容；</li>
+<li>非标准参数（-X），默认jvm实现这些功能，但不保证所有jvm都满足，且不保证向后兼容；</li>
+<li>非Stable参数（-XX），此类jvm参数实现会有所不同，将来会随时取消。-XX:-HeapDumpOnOutOfMemoryError当首次遭遇OOM时导出此时堆快照相关信息</li>
+</ol>
 </blockquote>
-<p>3.5 验证登录</p>
-<p>使用jps命令验证</p>
-<blockquote>
-<p>NameNode</p>
-<p>Jps</p>
-<p>SecondaryNameNode</p>
-<p>NodeManager</p>
-<p>ResourceManager</p>
-<p>DataNode</p>
+<h2 id="一些常用参数"><a href="#一些常用参数" class="headerlink" title="一些常用参数"></a>一些常用参数</h2><table>
+<thead>
+<tr>
+<th>参数</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-Xms</td>
+<td style="text-align:center">程序启动时占用内存大小，一般来说，大一点会启动的快一点，但是也可能呢会导致机器暂时缓慢</td>
+</tr>
+<tr>
+<td>-Xmx</td>
+<td style="text-align:center">指定程序运行期间最大可占用内存大小。如果程序需要占用更多内存，超出这个设定值就会抛出OOM异常</td>
+</tr>
+<tr>
+<td>-Xoss</td>
+<td style="text-align:center">设置本地方法栈，对Hotspot无效</td>
+</tr>
+<tr>
+<td>-Xss</td>
+<td style="text-align:center">设置栈的大小</td>
+</tr>
+<tr>
+<td>-XX:PermSize -XX:MaxPermSize</td>
+<td style="text-align:center">设置方法区大小</td>
+</tr>
+<tr>
+<td>-XX:MaxDirectoryMemorySize</td>
+<td style="text-align:center">指定直接内存大小，如果不指定，默认-Xmx</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="jvm内存组成"><a href="#jvm内存组成" class="headerlink" title="jvm内存组成"></a>jvm内存组成</h1><p><img src="http://p1791xv5d.bkt.clouddn.com/jvm%E5%86%85%E5%AD%98%E5%9B%BE.png" alt=""></p>
+<h2 id="线程共享区（方法区和堆）"><a href="#线程共享区（方法区和堆）" class="headerlink" title="线程共享区（方法区和堆）"></a>线程共享区（方法区和堆）</h2><h3 id="方法区（Hotspot的永久代）"><a href="#方法区（Hotspot的永久代）" class="headerlink" title="方法区（Hotspot的永久代）"></a>方法区（Hotspot的永久代）</h3><blockquote>
+<p>主要存储：<strong>运行时常量池</strong>，已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等</p>
+<p>内存不足抛出异常：OOM</p>
 </blockquote>
+<p>几个参数定义：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th style="text-align:center">定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>运行时常量池Const Pool Table</td>
+<td style="text-align:center">用于存放编译期生成的字面量和符号引用。并非预置入Class文件中常量池的内容才进入方法运行时常量池，运行期间也可能将新的常量放入（String的intern方法，将new出的String搬到常量池的StringTable）</td>
+</tr>
+<tr>
+<td>直接内存</td>
+<td style="text-align:center">并不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域。JDK1.4加入了NIO，引入一种基于通道与缓冲区的I/O方式，它可以使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作。因为避免了在Java堆和Native堆中来回复制数据，提高了性能。</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String str1 = <span class="keyword">new</span> StringBuilder(<span class="string">"计算机"</span>).append(<span class="string">"软件"</span>).toString();</span><br><span class="line">System.out.println(str1.intern() == str1);</span><br><span class="line"></span><br><span class="line">String str2 = <span class="keyword">new</span> StringBuilder(<span class="string">"ma"</span>).append(<span class="string">"in"</span>).toString();</span><br><span class="line">System.out.println(str2.intern() == str2);</span><br><span class="line"></span><br><span class="line"><span class="number">1.6</span>:<span class="keyword">false</span> <span class="keyword">false</span></span><br><span class="line"><span class="number">1.7</span>:<span class="keyword">true</span> <span class="keyword">false</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.6</span>是将首次出现的字符串复制到永久代，<span class="number">1.7</span>只是将首次出现的实例引用记录</span><br></pre></td></tr></table></figure>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><blockquote>
+<p>主要存储：对象实例，垃圾回收的主要区域</p>
+<p>内存不足抛出异常：OOM</p>
+<p>堆细分为新生代和老年代，新生代细分为：Eden区，from Survivor和to Survivor 比例为8:1:1，大对象直接进入老年代</p>
+</blockquote>
+<h2 id="线程独占区（虚拟机栈，本地方法栈和程序计数器）"><a href="#线程独占区（虚拟机栈，本地方法栈和程序计数器）" class="headerlink" title="线程独占区（虚拟机栈，本地方法栈和程序计数器）"></a>线程独占区（虚拟机栈，本地方法栈和程序计数器）</h2><h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>每个方法在执行的同时都会创建一个栈帧</p>
 <blockquote>
-<p><a href="http://10.239.11.28:50070" target="_blank" rel="noopener">http://10.239.11.28:50070</a> （HDFS管理界面）</p>
-<p><a href="http://10.239.11.28:8088" target="_blank" rel="noopener">http://10.239.11.28:8088</a> （MR管理界面）</p>
+<p>主要存储：数据和部分过程结果的数据结构，动态链接，方法返回值和异常处理</p>
+<p>抛出异常：1. 线程请求的深度大于虚拟机允许的深度(递归)，抛出StackOverflowError；2. 如果虚拟机可以动态拓展，拓展时没有申请到足够的内存抛出OOM</p>
+</blockquote>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>和虚拟机栈类似，不同的是本地方法栈为Native方法服务，A native method is a Java method whose implementation is provided by non-java code.</p>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器；</p>
+<blockquote>
+<p>主要存储：如果是Java方法，存放正在执行的虚拟机字节码指令的地址，如果是native方法，数值为undefined</p>
+<p>抛出异常：该区域是唯一一个没有规定任何OutOfMemoryError的区域</p>
 </blockquote>
 
       
@@ -432,7 +484,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/jvm/" rel="tag"># jvm</a>
           
         </div>
       
@@ -445,14 +497,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/09/05/MySql-MVCC/" rel="next" title="MySql MVCC">
+                <i class="fa fa-chevron-left"></i> MySql MVCC
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/24/hadoopException/" rel="prev" title="hadoop 异常">
-                hadoop 异常 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/09/对象的创建与访问/" rel="prev" title="对象的创建与访问">
+                对象的创建与访问 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -505,8 +561,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -572,6 +637,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一些参数"><span class="nav-number">1.</span> <span class="nav-text">一些参数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java启动参数分类"><span class="nav-number">1.1.</span> <span class="nav-text">Java启动参数分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些常用参数"><span class="nav-number">1.2.</span> <span class="nav-text">一些常用参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jvm内存组成"><span class="nav-number">2.</span> <span class="nav-text">jvm内存组成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程共享区（方法区和堆）"><span class="nav-number">2.1.</span> <span class="nav-text">线程共享区（方法区和堆）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区（Hotspot的永久代）"><span class="nav-number">2.1.1.</span> <span class="nav-text">方法区（Hotspot的永久代）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆"><span class="nav-number">2.1.2.</span> <span class="nav-text">堆</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程独占区（虚拟机栈，本地方法栈和程序计数器）"><span class="nav-number">2.2.</span> <span class="nav-text">线程独占区（虚拟机栈，本地方法栈和程序计数器）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机栈"><span class="nav-number">2.2.1.</span> <span class="nav-text">虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">2.2.2.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器"><span class="nav-number">2.2.3.</span> <span class="nav-text">程序计数器</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
