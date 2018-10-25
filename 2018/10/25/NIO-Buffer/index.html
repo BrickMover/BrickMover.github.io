@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1.Buffer概况12345678	java.nio.Buffer* ByteBuffer* CharBuffer* DoubleBuffer* FloatBuffer* IntBuffer* LongBuffer* ShortBuffer">
+<meta name="description" content="1 Buffer概况12345678java.nio.Buffer	ByteBuffer	CharBuffer	DoubleBuffer	FloatBuffer	IntBuffer	LongBuffer	ShortBuffer buffer是非线程安全的，如在多线程环境下使用，需要做控制 2 Buffer属性2.1 capacitycapacity表示缓冲区的大小，所能融入元素的最大数量，即容量，">
 <meta name="keywords" content="java, nio">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NIO-Buffer">
 <meta property="og:url" content="http://yoursite.com/2018/10/25/NIO-Buffer/index.html">
 <meta property="og:site_name" content="SlowDown">
-<meta property="og:description" content="1.Buffer概况12345678	java.nio.Buffer* ByteBuffer* CharBuffer* DoubleBuffer* FloatBuffer* IntBuffer* LongBuffer* ShortBuffer">
+<meta property="og:description" content="1 Buffer概况12345678java.nio.Buffer	ByteBuffer	CharBuffer	DoubleBuffer	FloatBuffer	IntBuffer	LongBuffer	ShortBuffer buffer是非线程安全的，如在多线程环境下使用，需要做控制 2 Buffer属性2.1 capacitycapacity表示缓冲区的大小，所能融入元素的最大数量，即容量，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-25T03:19:23.981Z">
+<meta property="og:updated_time" content="2018-10-25T11:37:47.589Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NIO-Buffer">
-<meta name="twitter:description" content="1.Buffer概况12345678	java.nio.Buffer* ByteBuffer* CharBuffer* DoubleBuffer* FloatBuffer* IntBuffer* LongBuffer* ShortBuffer">
+<meta name="twitter:description" content="1 Buffer概况12345678java.nio.Buffer	ByteBuffer	CharBuffer	DoubleBuffer	FloatBuffer	IntBuffer	LongBuffer	ShortBuffer buffer是非线程安全的，如在多线程环境下使用，需要做控制 2 Buffer属性2.1 capacitycapacity表示缓冲区的大小，所能融入元素的最大数量，即容量，">
 
 
 
@@ -383,7 +383,37 @@
       
 
       
-        <h1 id="1-Buffer概况"><a href="#1-Buffer概况" class="headerlink" title="1.Buffer概况"></a>1.Buffer概况</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">	java.nio.Buffer</span><br><span class="line">* ByteBuffer</span><br><span class="line">* CharBuffer</span><br><span class="line">* DoubleBuffer</span><br><span class="line">* FloatBuffer</span><br><span class="line">* IntBuffer</span><br><span class="line">* LongBuffer</span><br><span class="line">* ShortBuffer</span><br></pre></td></tr></table></figure>
+        <h1 id="1-Buffer概况"><a href="#1-Buffer概况" class="headerlink" title="1 Buffer概况"></a>1 Buffer概况</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">java.nio.Buffer</span><br><span class="line">	ByteBuffer</span><br><span class="line">	CharBuffer</span><br><span class="line">	DoubleBuffer</span><br><span class="line">	FloatBuffer</span><br><span class="line">	IntBuffer</span><br><span class="line">	LongBuffer</span><br><span class="line">	ShortBuffer</span><br></pre></td></tr></table></figure>
+<p>buffer是非线程安全的，如在多线程环境下使用，需要做控制</p>
+<h1 id="2-Buffer属性"><a href="#2-Buffer属性" class="headerlink" title="2 Buffer属性"></a>2 Buffer属性</h1><h2 id="2-1-capacity"><a href="#2-1-capacity" class="headerlink" title="2.1 capacity"></a>2.1 capacity</h2><p>capacity表示缓冲区的大小，所能融入元素的最大数量，即容量，在创建Buffer时确定，<code>allocate()</code> 进行配置，不能修改。</p>
+<h2 id="2-2-position"><a href="#2-2-position" class="headerlink" title="2.2 position"></a>2.2 position</h2><p>写模式下，position表示当前位置，初始值为0；<br>从写模式切换到读模式，position置为0</p>
+<h2 id="2-3-limit"><a href="#2-3-limit" class="headerlink" title="2.3 limit"></a>2.3 limit</h2><p>写模式下，limit=capacity，表示buffer最多可以写多少数据<br>读模式下，limit表示有多少数据可以读取，从写切换到读，limit设置为写模式下position值</p>
+<h2 id="2-4-mark"><a href="#2-4-mark" class="headerlink" title="2.4 mark"></a>2.4 mark</h2><p>设置一个备忘位置，调用<code>mark()</code>将mark=position，调用<code>reset()</code>将position = mark</p>
+<p>四个属性大小关系：<code>0 &lt;= mark &lt;= position &lt;= limit &lt;= capacity</code></p>
+<h1 id="3-Buffer一般操作"><a href="#3-Buffer一般操作" class="headerlink" title="3 Buffer一般操作"></a>3 Buffer一般操作</h1><blockquote>
+<ol>
+<li>写入数据到buffer</li>
+<li>调用<code>flip()</code>方法，切换到读模式</li>
+<li>从buffer中读取数据</li>
+<li>调用<code>clear()</code>或者<code>compact()</code>方法，可再次写</li>
+</ol>
+</blockquote>
+<h2 id="3-1-分配buffer"><a href="#3-1-分配buffer" class="headerlink" title="3.1 分配buffer"></a>3.1 分配buffer</h2><p><code>ByteBuffer buffer = ByteBuffer.allocate(1024)</code></p>
+<h2 id="3-2-写数据到Buffer"><a href="#3-2-写数据到Buffer" class="headerlink" title="3.2 写数据到Buffer"></a>3.2 写数据到Buffer</h2><blockquote>
+<ol>
+<li>channel.read(buffer)</li>
+<li>buffer.put(“abc”)</li>
+</ol>
+</blockquote>
+<h2 id="3-3-flip"><a href="#3-3-flip" class="headerlink" title="3.3 flip"></a>3.3 flip</h2><p>写模式切换到读模式，position=0，limit=原position</p>
+<h2 id="3-4-从Buffer中读"><a href="#3-4-从Buffer中读" class="headerlink" title="3.4 从Buffer中读"></a>3.4 从Buffer中读</h2><blockquote>
+<ol>
+<li>channel.write(buffer)</li>
+<li>buffer.get()</li>
+</ol>
+</blockquote>
+<h2 id="3-5-其他方法"><a href="#3-5-其他方法" class="headerlink" title="3.5 其他方法"></a>3.5 其他方法</h2><p><code>clear()</code>清空buffer，position=0，limit=capacity；<br><code>compact()</code>将未读的数据移到头部，position=未读数据个数+1，limit=capacity<br><code>rewind()</code>position=0, limit不变，可重新读取</p>
+<h1 id="4-buffer使用简例"><a href="#4-buffer使用简例" class="headerlink" title="4 buffer使用简例"></a>4 buffer使用简例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        RandomAccessFile accessFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"buffer.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">        FileChannel channel = accessFile.getChannel();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//分配buffer</span></span><br><span class="line">        ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> readLen = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//写buffer channel.read(buffer)</span></span><br><span class="line">        <span class="keyword">while</span> ((readLen = channel.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">//切换到读</span></span><br><span class="line">            buffer.flip();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (buffer.hasRemaining()) &#123;</span><br><span class="line">                <span class="comment">//读buffer内容</span></span><br><span class="line">                System.out.print((<span class="keyword">char</span>)buffer.get());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//清空，待重写buffer</span></span><br><span class="line">            buffer.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        accessFile.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -589,7 +619,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Buffer概况"><span class="nav-number">1.</span> <span class="nav-text">1.Buffer概况</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Buffer概况"><span class="nav-number">1.</span> <span class="nav-text">1 Buffer概况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Buffer属性"><span class="nav-number">2.</span> <span class="nav-text">2 Buffer属性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-capacity"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 capacity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-position"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 position</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-limit"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 limit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-mark"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 mark</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Buffer一般操作"><span class="nav-number">3.</span> <span class="nav-text">3 Buffer一般操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-分配buffer"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 分配buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-写数据到Buffer"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 写数据到Buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-flip"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 flip</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-从Buffer中读"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 从Buffer中读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-其他方法"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 其他方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-buffer使用简例"><span class="nav-number">4.</span> <span class="nav-text">4 buffer使用简例</span></a></li></ol></div>
             
 
           </div>
