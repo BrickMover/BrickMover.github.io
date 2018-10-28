@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java, nio," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 Channel定义全新的，极好的Java IO示例，提供与IO服务的直接连接。Channel用于在buffer和channel另外一侧的obj(通常是file或者socket) 12345678910package java.nio.channels;/** * Channel 接口 */public interface Channel	&amp;#123;	    public boolean is">
+<meta name="keywords" content="java, nio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NIO-Channel">
+<meta property="og:url" content="http://yoursite.com/2018/10/28/NIO-Channel/index.html">
+<meta property="og:site_name" content="SlowDown">
+<meta property="og:description" content="1 Channel定义全新的，极好的Java IO示例，提供与IO服务的直接连接。Channel用于在buffer和channel另外一侧的obj(通常是file或者socket) 12345678910package java.nio.channels;/** * Channel 接口 */public interface Channel	&amp;#123;	    public boolean is">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-28T14:06:05.014Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NIO-Channel">
+<meta name="twitter:description" content="1 Channel定义全新的，极好的Java IO示例，提供与IO服务的直接连接。Channel用于在buffer和channel另外一侧的obj(通常是file或者socket) 12345678910package java.nio.channels;/** * Channel 接口 */public interface Channel	&amp;#123;	    public boolean is">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/28/NIO-Channel/"/>
+
+
+
+
+
+  <title>NIO-Channel | SlowDown</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SlowDown</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">You can't judge a tree by its bark.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/NIO-Channel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Itamar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SlowDown">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NIO-Channel</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-28T16:51:05+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nio/" itemprop="url" rel="index">
+                    <span itemprop="name">nio</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                   字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                   分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-Channel定义"><a href="#1-Channel定义" class="headerlink" title="1 Channel定义"></a>1 Channel定义</h1><p>全新的，极好的Java IO示例，提供与IO服务的直接连接。Channel用于在buffer和channel另外一侧的obj(通常是file或者socket)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.nio.channels;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Channel 接口</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Channel</span></span></span><br><span class="line"><span class="class">	</span>&#123;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isOpen</span><span class="params">( )</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>不同操作系统上的Channel实现会有根本上的差异</p>
+<h2 id="1-1-打开Channel"><a href="#1-1-打开Channel" class="headerlink" title="1.1 打开Channel"></a>1.1 打开Channel</h2><p>IO可以分为File IO和Stream IO，Channel也是如次分为FileChannel和三个socket channel(SocketChannel, ServerSocketChannel, DatagramChannel).</p>
+<p>Channel不同于Stream是，CHannel可以选择是单向还是双向，而Stream只能是单向通道</p>
+<h3 id="1-1-1-FileChannel-open"><a href="#1-1-1-FileChannel-open" class="headerlink" title="1.1.1 FileChannel open"></a>1.1.1 FileChannel open</h3><p>FileChannel只能通过一个打开的RandomAccessFile，FileInputStream或FileOutputStream对象上使用getChannel<br><strong>文件通道总是阻塞式的，因此不能用于非阻塞模式</strong></p>
+<p><strong>FileChannel对象是线程安全的</strong></p>
+<p>FileChannel读写示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//channel读取</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"><span class="keyword">int</span> byteRead = inChannel.read(buffer);</span><br><span class="line"></span><br><span class="line"><span class="comment">//channel写</span></span><br><span class="line">String data = <span class="string">"hello world"</span>;</span><br><span class="line">buffer.clear();</span><br><span class="line">buffer.put(data.getBytes());</span><br><span class="line">buffer.flip();</span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemaining())&#123;</span><br><span class="line">	inChannel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="2-FileChannel相关方法"><a href="#2-FileChannel相关方法" class="headerlink" title="2 FileChannel相关方法"></a>2 FileChannel相关方法</h1><p>FileChannel抽象类源码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">FileChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ByteChannel</span>, <span class="title">GatheringByteChannel</span>, <span class="title">ScatteringByteChannel</span> </span>&#123;</span><br><span class="line">    <span class="comment">// This is a partial API listing</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">long</span> <span class="title">position</span><span class="params">( )</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> FileChannel <span class="title">position</span> <span class="params">(<span class="keyword">long</span> newPosition)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span> <span class="params">(ByteBuffer dst)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span> <span class="params">(ByteBuffer dst, <span class="keyword">long</span> position)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">write</span> <span class="params">(ByteBuffer src)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">write</span> <span class="params">(ByteBuffer src, <span class="keyword">long</span> position)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">long</span> <span class="title">size</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">truncate</span> <span class="params">(<span class="keyword">long</span> size)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">force</span> <span class="params">(<span class="keyword">boolean</span> metaData)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="2-1-position"><a href="#2-1-position" class="headerlink" title="2.1  position"></a>2.1  position</h2><p>无参的position函数，返回当前文件的position<br>有参的position函数，返回指定位置的channel对象，负值会导致<code>java.lang.IllegalArgumentException</code>异常，数值越界时，读返回文件尾，写则造成文件空洞</p>
+<h2 id="2-2-size"><a href="#2-2-size" class="headerlink" title="2.2 size"></a>2.2 size</h2><p>size方法返回关联文件的大小<br><code>long fileSize = channel.size()</code></p>
+<h2 id="2-3-truncate"><a href="#2-3-truncate" class="headerlink" title="2.3 truncate"></a>2.3 truncate</h2><p>截取文件方法，将指定长度后面的部分删除，保留指定长度部分<br><code>channel.truncate(1024)</code>截取前1024字节</p>
+<h2 id="2-4-force"><a href="#2-4-force" class="headerlink" title="2.4 force"></a>2.4 force</h2><p>该方法告诉通道强制将全部待定的修改都应用到磁盘的文件上。所有的现代文件系统都会缓存数据和延迟磁盘文件更新以提高性能。调用force()方法要 求文件的所有待定修改立即同步到磁盘。<code>channel.force(true)</code></p>
+<h1 id="3-ServerSocketChannel"><a href="#3-ServerSocketChannel" class="headerlink" title="3 ServerSocketChannel"></a>3 ServerSocketChannel</h1><p>抽象类源码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerSocketChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractSelectableChannel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ServerSocketChannel <span class="title">open</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">	    <span class="keyword">public</span> <span class="keyword">abstract</span> ServerSocket <span class="title">socket</span><span class="params">( )</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> ServerSocket <span class="title">accept</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">validOps</span><span class="params">( )</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>ServerSocketChannel 是一个基于通道的 socket 监听器。它同我们所熟悉的<code>java.net.ServerSocket</code>执行相同的基本任务，不过它增加了通道语义，因此能够在非阻塞模式下运行。</p>
+<h2 id="3-1-打开ServerSocketChannel"><a href="#3-1-打开ServerSocketChannel" class="headerlink" title="3.1 打开ServerSocketChannel"></a>3.1 打开ServerSocketChannel</h2><p><code>ServerSocketChannel ssc = ServerSocketChannel.open();</code>返回一个未绑定的<code>java.net.ServerSocket</code>关联的通道。该ServerSocket需要通过方法<code>socket()</code>获取<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ServerSocketChannel ssc = ServerSocketChannel.open( );</span><br><span class="line">ServerSocket serverSocket = ssc.socket( );</span><br><span class="line"><span class="comment">// Listen on port 1234</span></span><br><span class="line">serverSocket.bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">1234</span>));</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-2-accept"><a href="#3-2-accept" class="headerlink" title="3.2 accept"></a>3.2 accept</h2><p>同它的对等体<code>java.net.ServerSocket</code>一样，ServerSocketChannel也有accept()方法。</p>
+<blockquote>
+<p>如果在ServerSocket上调用accept()方法，那么它会同任何其他的ServerSocket表现一样:总是阻塞并返回一个<code>java.net.Socket</code>对象。</p>
+</blockquote>
+<blockquote>
+<p>如果您选择在ServerSocketChannel上调用accept()方法则会返回SocketChannel类型的对象，返回的对象能够在非阻塞模式下运行。</p>
+</blockquote>
+<p>channel上accept示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChannelAccept</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String GREETING = <span class="string">"Hello I must be going.\r\n"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String [] argv)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">	        <span class="keyword">int</span> port = <span class="number">1234</span>; <span class="comment">// default</span></span><br><span class="line">	        <span class="keyword">if</span> (argv.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">	            port = Integer.parseInt (argv [<span class="number">0</span>]);</span><br><span class="line">	        &#125;</span><br><span class="line">        	ByteBuffer buffer = ByteBuffer.wrap (GREETING.getBytes( ));</span><br><span class="line">        	ServerSocketChannel ssc = ServerSocketChannel.open( );</span><br><span class="line"></span><br><span class="line">			ssc.socket( ).bind (<span class="keyword">new</span> InetSocketAddress (port));</span><br><span class="line">        	ssc.configureBlocking (<span class="keyword">false</span>);</span><br><span class="line">	        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">	            System.out.println (<span class="string">"Waiting for connections"</span>);</span><br><span class="line">	            SocketChannel sc = ssc.accept( );</span><br><span class="line">	            <span class="keyword">if</span> (sc == <span class="keyword">null</span>) &#123;</span><br><span class="line">	                <span class="comment">// no connections, snooze a while</span></span><br><span class="line">	                Thread.sleep (<span class="number">2000</span>);</span><br><span class="line">	            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	                System.out.println (<span class="string">"Incoming connection from: "</span></span><br><span class="line">	                   + sc.socket().getRemoteSocketAddress( ));</span><br><span class="line">	                buffer.rewind( );</span><br><span class="line">	                sc.write (buffer);</span><br><span class="line">	                sc.close( );</span><br><span class="line">				&#125; </span><br><span class="line">			&#125;</span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-3-configureBlocking"><a href="#3-3-configureBlocking" class="headerlink" title="3.3 configureBlocking"></a>3.3 configureBlocking</h2><p>configureBlocking继承自SelectableChannel，用于设置是否阻塞调用</p>
+<h2 id="3-4-validOps"><a href="#3-4-validOps" class="headerlink" title="3.4 validOps"></a>3.4 validOps</h2><p>见Selector。</p>
+<h1 id="4-SocketChannel"><a href="#4-SocketChannel" class="headerlink" title="4 SocketChannel"></a>4 SocketChannel</h1><p>SocketChannel是链接到TCP网络套接字的通道，主要有下面两种创建方式：</p>
+<blockquote>
+<p>打开一个SocketChannel，链接到互联网上的某台机器<br>一个新连接到达时ServerSocketChannel时，会创建一个SocketChannel</p>
+</blockquote>
+<p>由于继承了SelectableChannel，SocketChannel可以在非阻塞模式下运行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SocketChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractSelectableChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ByteChannel</span>, <span class="title">ScatteringByteChannel</span>, <span class="title">GatheringByteChannel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	    <span class="comment">// This is a partial API listing</span></span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SocketChannel <span class="title">open</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">	    <span class="keyword">public</span> <span class="keyword">static</span> SocketChannel <span class="title">open</span> <span class="params">(InetSocketAddress remote)</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">	    <span class="keyword">public</span> <span class="keyword">abstract</span> Socket <span class="title">socket</span><span class="params">( )</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">connect</span> <span class="params">(SocketAddress remote)</span> <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">isConnectionPending</span><span class="params">( )</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">finishConnect</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">isConnected</span><span class="params">( )</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">validOps</span><span class="params">( )</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><em>虽然每个SocketChannel对象都会创建一个对等的Socket对象，反过来却不成立。直接创建的Socket对象不会关联SocketChannel对象，它们的getChannel()方法只返回null。</em></p>
+<h2 id="4-1-打开，关闭SocketChannel"><a href="#4-1-打开，关闭SocketChannel" class="headerlink" title="4.1 打开，关闭SocketChannel"></a>4.1 打开，关闭SocketChannel</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SocketChannel socketChannel = SocketChannel.open();</span><br><span class="line">socketChannel.connect(<span class="keyword">new</span> InetSocketAddress(<span class="string">"http://www.baidu.com"</span>, <span class="number">80</span>));</span><br><span class="line"></span><br><span class="line">socketChannel.close();</span><br></pre></td></tr></table></figure>
+<h2 id="4-2-读写SocketChannel"><a href="#4-2-读写SocketChannel" class="headerlink" title="4.2 读写SocketChannel"></a>4.2 读写SocketChannel</h2><p>从SocketChannel中读<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"><span class="keyword">int</span> bytesRead = socketChannel.read(buffer);</span><br></pre></td></tr></table></figure></p>
+<p>返回-1表示读完</p>
+<h2 id="4-3-写入SocketChannel"><a href="#4-3-写入SocketChannel" class="headerlink" title="4.3 写入SocketChannel"></a>4.3 写入SocketChannel</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">String data = <span class="string">"New String to write to file..."</span> + System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">buffer.clear();</span><br><span class="line">buffer.put(data.getBytes());</span><br><span class="line"></span><br><span class="line">buffer.flip();</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemaining()) &#123;</span><br><span class="line">    channel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和FileChannel写差不多</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢你的5毛</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="http://p1791xv5d.bkt.clouddn.com/Wechat.jpeg" alt="Itamar 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="http://p1791xv5d.bkt.clouddn.com/Alipay.jpeg" alt="Itamar 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java-nio/" rel="tag"># java, nio</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/25/NIO-Buffer/" rel="next" title="NIO-Buffer">
+                <i class="fa fa-chevron-left"></i> NIO-Buffer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpeg"
+                alt="Itamar" />
+            
+              <p class="site-author-name" itemprop="name">Itamar</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Channel定义"><span class="nav-number">1.</span> <span class="nav-text">1 Channel定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-打开Channel"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 打开Channel</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-1-FileChannel-open"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1.1 FileChannel open</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-FileChannel相关方法"><span class="nav-number">2.</span> <span class="nav-text">2 FileChannel相关方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-position"><span class="nav-number">2.1.</span> <span class="nav-text">2.1  position</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-size"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 size</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-truncate"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 truncate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-force"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 force</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-ServerSocketChannel"><span class="nav-number">3.</span> <span class="nav-text">3 ServerSocketChannel</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-打开ServerSocketChannel"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 打开ServerSocketChannel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-accept"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 accept</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-configureBlocking"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 configureBlocking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-validOps"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 validOps</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-SocketChannel"><span class="nav-number">4.</span> <span class="nav-text">4 SocketChannel</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-打开，关闭SocketChannel"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 打开，关闭SocketChannel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-读写SocketChannel"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 读写SocketChannel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-写入SocketChannel"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 写入SocketChannel</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Itamar</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+-->
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+ -->
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共字</span>
+</div>
+<div class="powered-by">  
+  </div>
+<span></span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
