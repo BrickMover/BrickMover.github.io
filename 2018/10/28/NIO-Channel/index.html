@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="SlowDown">
 <meta property="og:description" content="1 Channel定义全新的，极好的Java IO示例，提供与IO服务的直接连接。Channel用于在buffer和channel另外一侧的obj(通常是file或者socket) 12345678910package java.nio.channels;/** * Channel 接口 */public interface Channel	&amp;#123;	    public boolean is">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-28T14:06:05.014Z">
+<meta property="og:updated_time" content="2019-06-13T06:09:33.440Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NIO-Channel">
 <meta name="twitter:description" content="1 Channel定义全新的，极好的Java IO示例，提供与IO服务的直接连接。Channel用于在buffer和channel另外一侧的obj(通常是file或者socket) 12345678910package java.nio.channels;/** * Channel 接口 */public interface Channel	&amp;#123;	    public boolean is">
@@ -393,8 +393,8 @@
 <p>FileChannel读写示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//channel读取</span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"><span class="keyword">int</span> byteRead = inChannel.read(buffer);</span><br><span class="line"></span><br><span class="line"><span class="comment">//channel写</span></span><br><span class="line">String data = <span class="string">"hello world"</span>;</span><br><span class="line">buffer.clear();</span><br><span class="line">buffer.put(data.getBytes());</span><br><span class="line">buffer.flip();</span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemaining())&#123;</span><br><span class="line">	inChannel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="2-FileChannel相关方法"><a href="#2-FileChannel相关方法" class="headerlink" title="2 FileChannel相关方法"></a>2 FileChannel相关方法</h1><p>FileChannel抽象类源码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">FileChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ByteChannel</span>, <span class="title">GatheringByteChannel</span>, <span class="title">ScatteringByteChannel</span> </span>&#123;</span><br><span class="line">    <span class="comment">// This is a partial API listing</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">long</span> <span class="title">position</span><span class="params">( )</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> FileChannel <span class="title">position</span> <span class="params">(<span class="keyword">long</span> newPosition)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span> <span class="params">(ByteBuffer dst)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span> <span class="params">(ByteBuffer dst, <span class="keyword">long</span> position)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">write</span> <span class="params">(ByteBuffer src)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">write</span> <span class="params">(ByteBuffer src, <span class="keyword">long</span> position)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">long</span> <span class="title">size</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">truncate</span> <span class="params">(<span class="keyword">long</span> size)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">force</span> <span class="params">(<span class="keyword">boolean</span> metaData)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="2-1-position"><a href="#2-1-position" class="headerlink" title="2.1  position"></a>2.1  position</h2><p>无参的position函数，返回当前文件的position<br>有参的position函数，返回指定位置的channel对象，负值会导致<code>java.lang.IllegalArgumentException</code>异常，数值越界时，读返回文件尾，写则造成文件空洞</p>
-<h2 id="2-2-size"><a href="#2-2-size" class="headerlink" title="2.2 size"></a>2.2 size</h2><p>size方法返回关联文件的大小<br><code>long fileSize = channel.size()</code></p>
-<h2 id="2-3-truncate"><a href="#2-3-truncate" class="headerlink" title="2.3 truncate"></a>2.3 truncate</h2><p>截取文件方法，将指定长度后面的部分删除，保留指定长度部分<br><code>channel.truncate(1024)</code>截取前1024字节</p>
+<h2 id="2-2-size"><a href="#2-2-size" class="headerlink" title="2.2 size"></a>2.2 size</h2><p>size方法返回关联文件的大小<code>long fileSize = channel.size()</code></p>
+<h2 id="2-3-truncate"><a href="#2-3-truncate" class="headerlink" title="2.3 truncate"></a>2.3 truncate</h2><p>截取文件方法，将指定长度后面的部分删除，保留指定长度部分<code>channel.truncate(1024)</code>截取前1024字节</p>
 <h2 id="2-4-force"><a href="#2-4-force" class="headerlink" title="2.4 force"></a>2.4 force</h2><p>该方法告诉通道强制将全部待定的修改都应用到磁盘的文件上。所有的现代文件系统都会缓存数据和延迟磁盘文件更新以提高性能。调用force()方法要 求文件的所有待定修改立即同步到磁盘。<code>channel.force(true)</code></p>
 <h1 id="3-ServerSocketChannel"><a href="#3-ServerSocketChannel" class="headerlink" title="3 ServerSocketChannel"></a>3 ServerSocketChannel</h1><p>抽象类源码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerSocketChannel</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractSelectableChannel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ServerSocketChannel <span class="title">open</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">	    <span class="keyword">public</span> <span class="keyword">abstract</span> ServerSocket <span class="title">socket</span><span class="params">( )</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> ServerSocket <span class="title">accept</span><span class="params">( )</span> <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">validOps</span><span class="params">( )</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
 <p>ServerSocketChannel 是一个基于通道的 socket 监听器。它同我们所熟悉的<code>java.net.ServerSocket</code>执行相同的基本任务，不过它增加了通道语义，因此能够在非阻塞模式下运行。</p>
@@ -490,6 +490,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/11/29/布隆过滤器和bitmap/" rel="prev" title="布隆过滤器和bitmap">
+                布隆过滤器和bitmap <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -569,7 +573,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -591,7 +595,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -647,7 +651,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
